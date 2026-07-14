@@ -1,0 +1,353 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.local/product-ui-design-studio/design-profile.schema.json",
+  "title": "Open-ended Product UI Design Profile",
+  "type": "object",
+  "required": [
+    "product",
+    "direction",
+    "dials",
+    "platform"
+  ],
+  "additionalProperties": true,
+  "properties": {
+    "product": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "type": {
+          "type": "string"
+        },
+        "subject": {
+          "type": "string"
+        },
+        "audience": {
+          "type": [
+            "string",
+            "array"
+          ]
+        },
+        "primaryJob": {
+          "type": "string"
+        }
+      }
+    },
+    "direction": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": [
+        "thesis",
+        "sourceMode"
+      ],
+      "properties": {
+        "sourceMode": {
+          "type": "string",
+          "description": "Examples: user-defined, co-created, custom-generated, database-inspired, hybrid. Custom values are allowed."
+        },
+        "thesis": {
+          "type": "string"
+        },
+        "userLanguage": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "styleName": {
+          "type": "string",
+          "description": "Optional free-form name. It does not need to match a known style catalog."
+        },
+        "metaphor": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "signatureElement": {
+          "type": "string"
+        },
+        "forbiddenPatterns": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "dials": {
+      "type": "object",
+      "required": [
+        "variance",
+        "motion",
+        "density"
+      ],
+      "additionalProperties": true,
+      "properties": {
+        "variance": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 10
+        },
+        "motion": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 10
+        },
+        "density": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 10
+        },
+        "notes": {
+          "type": "string"
+        }
+      }
+    },
+    "palette": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "input": {
+          "description": "Original user colors, verbal direction, reference material, or generated concept."
+        },
+        "semantic": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "accessibilityAdjustments": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "typography": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "display": {
+          "type": [
+            "string",
+            "object"
+          ]
+        },
+        "body": {
+          "type": [
+            "string",
+            "object"
+          ]
+        },
+        "utility": {
+          "type": [
+            "string",
+            "object",
+            "null"
+          ]
+        }
+      }
+    },
+    "layout": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "motion": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "platform": {
+      "type": "object",
+      "required": [
+        "architecture"
+      ],
+      "additionalProperties": true,
+      "properties": {
+        "architecture": {
+          "const": "multi-page HTML"
+        },
+        "mobileFirst": {
+          "type": "boolean"
+        },
+        "rtl": {
+          "type": "boolean"
+        },
+        "reactReady": {
+          "type": "boolean",
+          "default": true
+        }
+      }
+    },
+    "evidence": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "userInputs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "references": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "databaseInputs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "customDecisions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "research": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "evidenceStatus": {
+          "type": "string"
+        },
+        "claims": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": true
+          }
+        },
+        "personas": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": true
+          }
+        },
+        "validationNeeded": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "inspiration": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "references": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": true
+          }
+        },
+        "synthesis": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "rejectedInfluences": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "content": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "voice": {
+          "type": [
+            "string",
+            "object"
+          ]
+        },
+        "vocabulary": {
+          "type": "object",
+          "additionalProperties": true
+        },
+        "locales": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "stressTests": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "quality": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "accessibilityTarget": {
+          "type": "string",
+          "default": "WCAG 2.2 AA"
+        },
+        "reviewSeverityScale": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "manualChecks": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "handoff": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "reactReady": {
+          "type": "boolean",
+          "default": true
+        },
+        "componentBoundaryAttribute": {
+          "type": "string",
+          "default": "data-component"
+        },
+        "behaviorHookAttribute": {
+          "type": "string",
+          "default": "data-action"
+        },
+        "migrationClasses": {
+          "type": "array",
+          "items": {
+            "enum": [
+              "direct",
+              "state-rewrite",
+              "library-adapter",
+              "backend-dependent",
+              "architecture-review"
+            ]
+          }
+        },
+        "artifacts": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

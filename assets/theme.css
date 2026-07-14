@@ -1,0 +1,136 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@plugin "@tailwindcss/typography";
+
+/*
+  Change --brand to update the product's primary color system.
+  Keep --brand-foreground readable against the chosen brand color.
+*/
+:root {
+  --brand: oklch(0.58 0.23 25);
+  --brand-foreground: oklch(0.99 0 0);
+
+  --background: oklch(0.985 0.004 250);
+  --surface: oklch(1 0 0);
+  --surface-elevated: oklch(0.97 0.006 250);
+  --foreground: oklch(0.19 0.015 250);
+  --muted-foreground: oklch(0.48 0.018 250);
+  --border: oklch(0.89 0.012 250);
+
+  --primary: var(--brand);
+  --primary-foreground: var(--brand-foreground);
+  --primary-hover: color-mix(in oklab, var(--brand), black 9%);
+  --primary-active: color-mix(in oklab, var(--brand), black 16%);
+  --primary-soft: color-mix(in oklab, var(--brand) 12%, transparent);
+  --primary-border: color-mix(in oklab, var(--brand) 28%, var(--border));
+
+  --success: oklch(0.61 0.16 150);
+  --warning: oklch(0.75 0.16 80);
+  --danger: oklch(0.58 0.22 25);
+  --focus: color-mix(in oklab, var(--brand) 72%, white);
+
+  --control-radius: 0.625rem;
+  --surface-radius: 0.875rem;
+  --surface-shadow: 0 1px 2px rgb(15 23 42 / 0.05), 0 12px 32px rgb(15 23 42 / 0.06);
+}
+
+[data-theme="dark"] {
+  --background: oklch(0.145 0.012 250);
+  --surface: oklch(0.19 0.014 250);
+  --surface-elevated: oklch(0.23 0.016 250);
+  --foreground: oklch(0.96 0.006 250);
+  --muted-foreground: oklch(0.71 0.016 250);
+  --border: oklch(0.3 0.018 250);
+
+  --primary-hover: color-mix(in oklab, var(--brand), white 9%);
+  --primary-active: color-mix(in oklab, var(--brand), white 16%);
+  --primary-soft: color-mix(in oklab, var(--brand) 18%, transparent);
+  --primary-border: color-mix(in oklab, var(--brand) 38%, var(--border));
+  --focus: color-mix(in oklab, var(--brand) 78%, white);
+  --surface-shadow: 0 1px 2px rgb(0 0 0 / 0.25), 0 16px 40px rgb(0 0 0 / 0.2);
+}
+
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
+@theme inline {
+  --color-background: var(--background);
+  --color-surface: var(--surface);
+  --color-surface-elevated: var(--surface-elevated);
+  --color-foreground: var(--foreground);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-border: var(--border);
+
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary-hover: var(--primary-hover);
+  --color-primary-active: var(--primary-active);
+  --color-primary-soft: var(--primary-soft);
+  --color-primary-border: var(--primary-border);
+
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+  --color-danger: var(--danger);
+  --color-focus: var(--focus);
+
+  --radius-control: var(--control-radius);
+  --radius-surface: var(--surface-radius);
+  --shadow-surface: var(--surface-shadow);
+
+  --ease-product: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --animate-enter: enter 420ms var(--ease-product) both;
+
+  @keyframes enter {
+    from {
+      opacity: 0;
+      transform: translateY(0.5rem);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+}
+
+@layer base {
+  *,
+  ::before,
+  ::after {
+    border-color: var(--border);
+  }
+
+  html {
+    color-scheme: light;
+    text-rendering: optimizeLegibility;
+  }
+
+  html[data-theme="dark"] {
+    color-scheme: dark;
+  }
+
+  body {
+    min-width: 20rem;
+    background: var(--background);
+    color: var(--foreground);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--focus);
+    outline-offset: 3px;
+  }
+
+  ::selection {
+    background: var(--primary-soft);
+    color: var(--foreground);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  ::before,
+  ::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

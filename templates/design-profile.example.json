@@ -1,0 +1,178 @@
+{
+  "product": {
+    "type": "mobile-first service marketplace",
+    "subject": "fitness coaching and class booking",
+    "audience": [
+      "athletes",
+      "new gym members"
+    ],
+    "primaryJob": "discover, compare, and book the right fitness service"
+  },
+  "direction": {
+    "sourceMode": "hybrid: user-defined plus custom-generated",
+    "thesis": "A dark training interface that feels like calibrated sports equipment rather than a generic gaming dashboard.",
+    "userLanguage": [
+      "dark",
+      "red and black",
+      "sporty",
+      "minimal",
+      "not generic"
+    ],
+    "styleName": "Calibrated Momentum",
+    "metaphor": "measured physical cadence and training instruments",
+    "signatureElement": "A progress rail that behaves like an interval-training timeline and connects discovery, booking, and attendance.",
+    "forbiddenPatterns": [
+      "generic purple gradient",
+      "glass cards on every surface",
+      "decorative 3D without product meaning",
+      "all content inside identical rounded cards"
+    ]
+  },
+  "dials": {
+    "variance": 7,
+    "motion": 6,
+    "density": 5,
+    "notes": "Distinctive composition and one strong motion sequence; normal task interactions remain restrained."
+  },
+  "palette": {
+    "input": {
+      "type": "user verbal direction",
+      "value": "dark red and black sporty theme"
+    },
+    "semantic": {
+      "background": "oklch(0.13 0.018 25)",
+      "surface": "oklch(0.18 0.02 25)",
+      "foreground": "oklch(0.96 0.008 25)",
+      "mutedForeground": "oklch(0.70 0.02 25)",
+      "primary": "oklch(0.61 0.24 25)",
+      "primaryForeground": "oklch(0.99 0 0)",
+      "border": "oklch(0.30 0.03 25)",
+      "focus": "oklch(0.72 0.20 25)"
+    },
+    "accessibilityAdjustments": []
+  },
+  "typography": {
+    "display": "A condensed or athletic display face with full required language support",
+    "body": "A highly readable UI family with Persian and Latin compatibility",
+    "utility": "A tabular-number face for time, distance, price, and progress data"
+  },
+  "layout": {
+    "mobile": "task-first bottom navigation and edge-to-edge primary flow",
+    "tablet": "split discovery and detail when space permits",
+    "desktop": "expanded application shell, not a stretched phone frame"
+  },
+  "motion": {
+    "mainSequence": "interval-like progress movement during onboarding and booking confirmation",
+    "functionalFeedback": "short state transitions for filters, selections, and validation",
+    "reducedMotion": "instant state changes with opacity-only feedback"
+  },
+  "platform": {
+    "architecture": "multi-page HTML",
+    "mobileFirst": true,
+    "rtl": true,
+    "reactReady": true
+  },
+  "evidence": {
+    "userInputs": [
+      "dark red-black sporty",
+      "mobile-first app experience",
+      "minimal by default"
+    ],
+    "references": [],
+    "databaseInputs": [
+      "used only to compare fitness UX patterns and accessibility risks"
+    ],
+    "customDecisions": [
+      "training-instrument metaphor",
+      "interval progress rail",
+      "controlled red signal hierarchy"
+    ]
+  },
+  "research": {
+    "evidenceStatus": "proposal and user-stated direction only; no validated end-user research",
+    "claims": [
+      {
+        "claim": "mobile booking should be the primary journey",
+        "evidenceType": "user direction",
+        "confidence": "high",
+        "validationStatus": "product decision"
+      },
+      {
+        "claim": "new members value fast service comparison",
+        "evidenceType": "hypothesis",
+        "confidence": "low",
+        "validationStatus": "needs usability or interview validation"
+      }
+    ],
+    "personas": [
+      {
+        "type": "proto-persona",
+        "name": "new gym member",
+        "validationStatus": "assumption-based"
+      }
+    ],
+    "validationNeeded": [
+      "compare booking-first and progress-first home-screen models with target users"
+    ]
+  },
+  "inspiration": {
+    "references": [],
+    "synthesis": [
+      "sports-equipment precision",
+      "controlled signal-red hierarchy"
+    ],
+    "rejectedInfluences": [
+      "generic gaming dashboard treatment",
+      "indiscriminate glassmorphism"
+    ]
+  },
+  "content": {
+    "voice": "direct, active, supportive without motivational filler",
+    "vocabulary": {
+      "service": "class or coaching session",
+      "primaryAction": "Book session"
+    },
+    "locales": [
+      "fa-IR",
+      "en"
+    ],
+    "stressTests": [
+      "long Persian labels",
+      "mixed LTR prices, phone numbers, and URLs"
+    ]
+  },
+  "quality": {
+    "accessibilityTarget": "WCAG 2.2 AA",
+    "reviewSeverityScale": [
+      "blocker",
+      "critical",
+      "major",
+      "minor",
+      "cosmetic"
+    ],
+    "manualChecks": [
+      "keyboard critical path",
+      "focus restoration",
+      "zoom/reflow",
+      "representative screen-reader output"
+    ]
+  },
+  "handoff": {
+    "reactReady": true,
+    "componentBoundaryAttribute": "data-component",
+    "behaviorHookAttribute": "data-action",
+    "migrationClasses": [
+      "direct",
+      "state-rewrite",
+      "library-adapter",
+      "backend-dependent",
+      "architecture-review"
+    ],
+    "artifacts": [
+      "design-system/component-map.json",
+      "docs/component-inventory.md",
+      "docs/route-map.md",
+      "docs/react-handoff.md"
+    ]
+  }
+}
