@@ -1,0 +1,8 @@
+interface:
+  display_name: "Product UI Design Studio"
+  short_description: "Design HTML/Tailwind product prototypes"
+  brand_color: "#6750A4"
+  default_prompt: "Use $product-ui-design-studio to turn this product brief into a client-ready HTML/Tailwind design prototype."
+
+policy:
+  allow_implicit_invocation: true

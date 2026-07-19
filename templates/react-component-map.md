@@ -1,10 +1,10 @@
-# React Migration Component Map
+# React Component Map
 
-The prototype itself remains HTML + Tailwind + vanilla JavaScript. This document records implementation-neutral contracts for a later React conversion.
+The prototype is static HTML + Tailwind CSS + vanilla JavaScript. This document records the future React contracts that should survive a later production implementation after client approval. Do not generate React files as part of the prototype.
 
 ## Component inventory
 
-| Prototype component | Selector | Suggested React name | Source pages | Migration class |
+| Prototype component | Source file | Production name | Source routes | Migration class |
 |---|---|---|---|---|
 | | | | | direct / state-rewrite / library-adapter / backend-dependent / architecture-review |
 
@@ -12,9 +12,9 @@ The prototype itself remains HTML + Tailwind + vanilla JavaScript. This document
 
 ### Semantic root
 
-### Suggested React file
+### Suggested future component path
 
-`src/components/[path]/[Name].tsx`
+`src/components/[path]/[Name]`
 
 ### Props/data
 
@@ -30,12 +30,11 @@ The prototype itself remains HTML + Tailwind + vanilla JavaScript. This document
 
 ### Callbacks/actions
 
-### Prototype hooks
+### Prototype behavior
 
-- `data-component`:
-- `data-action`:
-- JavaScript module:
 - Mock data source:
+- State owner:
+- Service boundary:
 
 ### Accessibility contract
 
@@ -45,8 +44,9 @@ The prototype itself remains HTML + Tailwind + vanilla JavaScript. This document
 
 ### Acceptance criteria
 
-- [ ] Markup can be represented without changing semantics.
-- [ ] Tailwind utilities use shared tokens and transfer to `className`.
+- [ ] Source prototype remains HTML, Tailwind CSS, and vanilla JavaScript only.
+- [ ] Tailwind utilities use shared tokens.
 - [ ] State and variants have explicit names.
-- [ ] DOM behavior has a documented React-state equivalent.
-- [ ] No business data is stored as HTML strings or CSS class names.
+- [ ] Prototype behavior maps to future production state, service, or route ownership.
+- [ ] No business data is stored as CSS class names.
+- [ ] No JSX, TSX, React imports, or framework routing exists in the prototype.

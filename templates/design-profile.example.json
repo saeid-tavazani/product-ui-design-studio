@@ -1,4 +1,19 @@
 {
+  "workflowGraph": {
+    "mode": "auto",
+    "completedNodes": [
+      "N0",
+      "N1",
+      "N2",
+      "N3",
+      "N4"
+    ],
+    "activeNode": "N5",
+    "blockers": [],
+    "assumptions": [
+      "mobile-first remains primary unless client analytics contradict it"
+    ]
+  },
   "product": {
     "type": "mobile-first service marketplace",
     "subject": "fitness coaching and class booking",
@@ -27,6 +42,59 @@
       "decorative 3D without product meaning",
       "all content inside identical rounded cards"
     ]
+  },
+  "visualSystem": {
+    "id": "fitness-calibrated-momentum",
+    "archetype": "custom",
+    "rationale": "The interface uses Material 3 adaptive structure and state behavior, then adds a training-instrument visual layer so booking feels precise, energetic, and task-first for athletes and new gym members.",
+    "themeFingerprint": {
+      "designArchetype": "mobile-service-sport",
+      "paletteModel": "dark neutral equipment surfaces with controlled signal-red action roles",
+      "typographyModel": "condensed display for momentum cues, readable bilingual UI text, tabular numeric session data",
+      "geometryModel": "subtle container radius with sharper control rhythm for a calibrated equipment feel",
+      "spacingModel": "mobile-first touch spacing with compact comparison rows",
+      "surfaceModel": "tonal Material 3 surfaces with product-specific rail and comparison panels",
+      "borderModel": "low-chroma outlines for separation on dark surfaces",
+      "elevationModel": "mostly flat tonal surfaces with elevation reserved for sheets and dialogs",
+      "layoutModel": "booking-first mobile flow that expands into split discovery/detail views",
+      "navigationModel": "bottom navigation on mobile, expanded rail on tablet and desktop",
+      "imageryModel": "real class and coach imagery with performance-data overlays",
+      "iconographyModel": "outlined functional icons with sport-status accents",
+      "motionModel": "functional transitions plus one interval-progress confirmation sequence",
+      "densityModel": "balanced mobile density, denser desktop comparison",
+      "signatureElement": "interval progress rail connecting discovery, booking, and attendance"
+    },
+    "derivedDimensions": [
+      "color",
+      "typography",
+      "geometry",
+      "spacing",
+      "surface treatment",
+      "navigation",
+      "motion",
+      "interaction emphasis"
+    ],
+    "rejectedGenericPatterns": [
+      "generic Material starter",
+      "purple SaaS gradient",
+      "gaming neon dashboard",
+      "identical rounded cards everywhere"
+    ],
+    "referenceInfluence": [],
+    "distinctivenessChecks": {
+      "distinctInGrayscale": true,
+      "distinctWithoutLogoOrImages": true,
+      "typographyGeometrySpacingSpecific": true,
+      "navigationMatchesUsage": true,
+      "statesMatchArchetype": true,
+      "transferToUnrelatedProductWouldFeelWrong": true,
+      "notes": "The interval rail, athletic typography, booking-first navigation, and calibrated surface model would not fit a generic B2B dashboard."
+    },
+    "similarityIntent": {
+      "intentional": false,
+      "reason": "",
+      "referenceSystem": ""
+    }
   },
   "dials": {
     "variance": 7,
@@ -60,6 +128,14 @@
     "mobile": "task-first bottom navigation and edge-to-edge primary flow",
     "tablet": "split discovery and detail when space permits",
     "desktop": "expanded application shell, not a stretched phone frame"
+  },
+  "layoutModel": {
+    "contentStructure": "booking-first flow with discover, compare, detail, confirm, and attendance status",
+    "navigationPattern": "mobile bottom navigation, tablet rail, desktop expanded shell",
+    "gridBehavior": "single-column mobile flow that becomes split discovery/detail on larger viewports",
+    "hierarchyStrategy": "primary session action stays visually dominant while comparison data remains scannable",
+    "responsiveTransformation": "mobile task steps expand into side-by-side browsing and booking context",
+    "reasoning": "fitness booking is often mobile and time-sensitive, but desktop users benefit from faster comparison."
   },
   "motion": {
     "mainSequence": "interval-like progress movement during onboarding and booking confirmation",
@@ -159,20 +235,23 @@
   },
   "handoff": {
     "reactReady": true,
-    "componentBoundaryAttribute": "data-component",
-    "behaviorHookAttribute": "data-action",
     "migrationClasses": [
       "direct",
       "state-rewrite",
       "library-adapter",
       "backend-dependent",
+      "performance-review",
       "architecture-review"
     ],
     "artifacts": [
       "design-system/component-map.json",
       "docs/component-inventory.md",
       "docs/route-map.md",
-      "docs/react-handoff.md"
+      "docs/state-inventory.md",
+      "docs/action-map.md",
+      "docs/data-contracts.md",
+      "docs/mocked-integrations.md",
+      "docs/production-conversion-plan.md"
     ]
   }
 }

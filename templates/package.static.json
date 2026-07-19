@@ -1,0 +1,14 @@
+{
+  "scripts": {
+    "dev:css": "tailwindcss -i ./assets/css/theme.css -o ./assets/css/output.css --watch",
+    "build:css": "tailwindcss -i ./assets/css/theme.css -o ./assets/css/output.css --minify",
+    "serve": "serve ."
+  },
+  "devDependencies": {
+    "@tailwindcss/cli": "latest",
+    "@tailwindcss/typography": "latest",
+    "serve": "latest",
+    "tailwindcss": "latest",
+    "tw-animate-css": "latest"
+  }
+}

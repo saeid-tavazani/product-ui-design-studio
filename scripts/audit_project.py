@@ -38,6 +38,89 @@ CLASS_LIST_STATE_RE = re.compile(r"\.classList\.(?:add|remove|toggle|replace)\s*
 CLASS_OR_STYLE_RE = re.compile(r'(?:style=["\'][^"\']*|class=["\'][^"\']*)', re.IGNORECASE)
 
 SEVERITY_ORDER = {"blocker": 0, "critical": 1, "major": 2, "minor": 3, "cosmetic": 4}
+VISUAL_ARCHETYPES = {
+    "editorial",
+    "operational",
+    "industrial",
+    "luxury",
+    "playful",
+    "educational",
+    "expressive",
+    "technical",
+    "institutional",
+    "calm-service",
+    "retail",
+    "media-rich",
+    "community-oriented",
+    "developer-tool",
+    "spatial",
+    "data-dense",
+    "custom",
+}
+VISUAL_DIMENSIONS = {
+    "color",
+    "typography",
+    "geometry",
+    "spacing",
+    "density",
+    "surface treatment",
+    "borders",
+    "elevation",
+    "composition",
+    "navigation",
+    "imagery",
+    "iconography",
+    "motion",
+    "data visualization",
+    "content rhythm",
+    "interaction emphasis",
+}
+FINGERPRINT_FIELDS = {
+    "designArchetype",
+    "paletteModel",
+    "typographyModel",
+    "geometryModel",
+    "spacingModel",
+    "surfaceModel",
+    "borderModel",
+    "elevationModel",
+    "layoutModel",
+    "navigationModel",
+    "imageryModel",
+    "iconographyModel",
+    "motionModel",
+    "densityModel",
+    "signatureElement",
+}
+DISTINCTIVENESS_FIELDS = {
+    "distinctInGrayscale",
+    "distinctWithoutLogoOrImages",
+    "typographyGeometrySpacingSpecific",
+    "navigationMatchesUsage",
+    "statesMatchArchetype",
+    "transferToUnrelatedProductWouldFeelWrong",
+}
+GENERIC_RATIONALES = {
+    "modern and clean",
+    "professional",
+    "user-friendly",
+    "beautiful",
+    "minimal and elegant",
+    "clean and modern",
+    "modern professional user friendly",
+}
+STARTER_TOKEN_VALUES = {
+    "oklch(0.985 0.004 250)",
+    "oklch(1 0 0)",
+    "oklch(0.97 0.006 250)",
+    "oklch(0.19 0.015 250)",
+    "oklch(0.48 0.018 250)",
+    "oklch(0.89 0.012 250)",
+    "oklch(0.58 0.23 25)",
+    "0.625rem",
+    "0.875rem",
+    "cubic-bezier(0.2, 0.8, 0.2, 1)",
+}
 
 
 @dataclass(frozen=True)
@@ -46,6 +129,7 @@ class Finding:
     code: str
     message: str
     file: str | None = None
+    remediation: str = "Review and correct the affected artifact."
 
 
 class PageParser(HTMLParser):
@@ -154,13 +238,311 @@ def rel(path: Path, root: Path) -> str:
     return str(path.relative_to(root)).replace("\\", "/")
 
 
-def add(findings: list[Finding], severity: str, code: str, message: str, file: str | None = None) -> None:
-    findings.append(Finding(severity, code, message, file))
+def add(
+    findings: list[Finding],
+    severity: str,
+    code: str,
+    message: str,
+    file: str | None = None,
+    remediation: str = "Review and correct the affected artifact.",
+) -> None:
+    findings.append(Finding(severity, code, message, file, remediation))
 
 
 def has_accessible_name(attrs: dict[str, str], text: str = "") -> bool:
     return bool(text.strip() or attrs.get("aria-label", "").strip() or attrs.get("aria-labelledby", "").strip() or attrs.get("title", "").strip())
 
+
+def normalize_words(value: object) -> str:
+    return re.sub(r"[^a-z0-9]+", " ", str(value).lower()).strip()
+
+
+def load_json(path: Path) -> dict[str, object] | None:
+    try:
+        data = json.loads(path.read_text(encoding="utf-8", errors="replace"))
+    except Exception:
+        return None
+    return data if isinstance(data, dict) else None
+
+
+def find_design_profile(root: Path) -> Path | None:
+    candidates = [
+        root / "design-system" / "design-profile.json",
+        root / "design-profile.json",
+    ]
+    for candidate in candidates:
+        if candidate.exists():
+            return candidate
+    matches = sorted(root.rglob("design-profile.json"))
+    return matches[0] if matches else None
+
+
+def is_generic_rationale(value: object) -> bool:
+    normalized = normalize_words(value)
+    if not normalized:
+        return True
+    if normalized in GENERIC_RATIONALES:
+        return True
+    words = set(normalized.split())
+    generic_words = {"modern", "clean", "professional", "user", "friendly", "beautiful", "minimal", "elegant", "simple", "nice"}
+    return bool(words) and words.issubset(generic_words)
+
+
+def similarity_is_intentional(visual_system: dict[str, object]) -> bool:
+    intent = visual_system.get("similarityIntent")
+    return isinstance(intent, dict) and intent.get("intentional") is True
+
+
+def audit_design_profile(profile_path: Path, root: Path, findings: list[Finding]) -> dict[str, object] | None:
+    location = rel(profile_path, root)
+    profile = load_json(profile_path)
+    if profile is None:
+        add(
+            findings,
+            "critical",
+            "profile-json",
+            "design-profile.json is missing or invalid JSON",
+            location,
+            "Repair the JSON file and include the required visualSystem object.",
+        )
+        return None
+
+    visual_system = profile.get("visualSystem")
+    if not isinstance(visual_system, dict):
+        add(
+            findings,
+            "critical",
+            "THEME002",
+            "Theme Fingerprint is missing because visualSystem is absent",
+            location,
+            "Add visualSystem with themeFingerprint, derivedDimensions, rationale, and distinctivenessChecks before implementation.",
+        )
+        return profile
+
+    fingerprint = visual_system.get("themeFingerprint")
+    if not isinstance(fingerprint, dict):
+        add(
+            findings,
+            "critical",
+            "THEME002",
+            "visualSystem.themeFingerprint is missing",
+            location,
+            "Create a Theme Fingerprint with palette, typography, geometry, density, layout, navigation, motion, and signature fields.",
+        )
+    else:
+        missing = sorted(field for field in FINGERPRINT_FIELDS if not str(fingerprint.get(field, "")).strip())
+        if missing:
+            add(
+                findings,
+                "critical",
+                "THEME002",
+                "Theme Fingerprint is incomplete: " + ", ".join(missing),
+                location,
+                "Complete every required Theme Fingerprint field before implementation.",
+            )
+        if not str(fingerprint.get("signatureElement", "")).strip():
+            add(
+                findings,
+                "major",
+                "THEME010",
+                "Signature element is missing from the Theme Fingerprint",
+                location,
+                "Define one product-specific signature element and document where it appears.",
+            )
+
+    archetype = visual_system.get("archetype")
+    if archetype not in VISUAL_ARCHETYPES:
+        add(
+            findings,
+            "major",
+            "THEME011",
+            f"Invalid or missing visual archetype: {archetype}",
+            location,
+            "Choose an allowed archetype or use custom with a specific rationale.",
+        )
+
+    rationale = visual_system.get("rationale", "")
+    if is_generic_rationale(rationale):
+        add(
+            findings,
+            "major",
+            "THEME004",
+            "Visual rationale is empty or generic",
+            location,
+            "Replace generic phrasing with product-specific decisions for typography, geometry, density, surface, motion, and composition.",
+        )
+
+    dimensions = visual_system.get("derivedDimensions")
+    if not isinstance(dimensions, list):
+        dimensions = []
+    normalized_dimensions = [str(item).strip() for item in dimensions]
+    if len(normalized_dimensions) != len(set(normalized_dimensions)):
+        add(
+            findings,
+            "major",
+            "THEME012",
+            "derivedDimensions contains duplicate values",
+            location,
+            "Remove duplicate dimensions and keep each derived dimension unique.",
+        )
+    invalid_dimensions = sorted({item for item in normalized_dimensions if item not in VISUAL_DIMENSIONS})
+    if invalid_dimensions:
+        add(
+            findings,
+            "major",
+            "THEME013",
+            "derivedDimensions contains unsupported values: " + ", ".join(invalid_dimensions),
+            location,
+            "Use the supported visual-system dimension names from the schema.",
+        )
+    tier = str(profile.get("deliveryTier", "standard"))
+    required_count = 5 if tier == "concept" else 8
+    if len(set(normalized_dimensions)) < required_count:
+        add(
+            findings,
+            "critical",
+            "THEME003",
+            f"Too few visual dimensions were derived: {len(set(normalized_dimensions))}/{required_count}",
+            location,
+            "Derive enough unique dimensions before implementation; color-only differentiation is invalid.",
+        )
+
+    checks = visual_system.get("distinctivenessChecks")
+    if not isinstance(checks, dict):
+        add(
+            findings,
+            "major",
+            "THEME001",
+            "Distinctiveness checks are missing",
+            location,
+            "Complete distinctivenessChecks, including grayscale and logo/image removal tests.",
+        )
+    else:
+        incomplete = sorted(field for field in DISTINCTIVENESS_FIELDS if checks.get(field) is not True)
+        if incomplete:
+            add(
+                findings,
+                "major",
+                "THEME001",
+                "Distinctiveness checks are incomplete or false: " + ", ".join(incomplete),
+                location,
+                "Revise the visual system until every anti-recolor check passes, unless documented similarity is intentional.",
+            )
+
+    layout_model = profile.get("layoutModel")
+    if not isinstance(layout_model, dict) or not all(str(layout_model.get(key, "")).strip() for key in ("contentStructure", "navigationPattern", "gridBehavior", "hierarchyStrategy", "responsiveTransformation", "reasoning")):
+        add(
+            findings,
+            "major",
+            "THEME009",
+            "Layout model is missing or incomplete",
+            location,
+            "Define content structure, navigation pattern, grid behavior, hierarchy strategy, responsive transformation, and reasoning.",
+        )
+
+    if similarity_is_intentional(visual_system):
+        intent = visual_system.get("similarityIntent", {})
+        if isinstance(intent, dict) and not str(intent.get("reason", "")).strip():
+            add(
+                findings,
+                "minor",
+                "THEME014",
+                "Intentional similarity is enabled without a reason",
+                location,
+                "Explain why similarity is intentional and name the reference design system.",
+            )
+
+    return profile
+
+
+def audit_theme_css(root: Path, findings: list[Finding], profile: dict[str, object] | None) -> None:
+    theme_candidates = list(root.rglob("theme.css"))
+    visual_system = profile.get("visualSystem") if isinstance(profile, dict) else {}
+    visual_system = visual_system if isinstance(visual_system, dict) else {}
+
+    if not theme_candidates:
+        add(
+            findings,
+            "critical",
+            "theme-file",
+            "theme.css not found",
+            None,
+            "Create a project-specific assets/css/theme.css derived from the Visual System Derivation.",
+        )
+        return
+
+    theme_text = "\n".join(p.read_text(encoding="utf-8", errors="replace") for p in theme_candidates)
+    theme_lower = theme_text.lower()
+    token_groups = {
+        "primary": ("--primary", "--color-primary"),
+        "background": ("--background", "--color-background"),
+        "foreground": ("--foreground", "--color-foreground"),
+        "border": ("--border", "--color-border"),
+        "focus": ("--focus", "--color-focus"),
+    }
+    for label, tokens in token_groups.items():
+        if not any(token in theme_text for token in tokens):
+            add(findings, "major", "theme-token", f"Semantic token missing from theme CSS: {label}")
+    if "prefers-reduced-motion" not in theme_text:
+        add(findings, "critical", "reduced-motion", "Reduced-motion handling missing from theme CSS")
+    if ":focus-visible" not in theme_text:
+        add(findings, "critical", "focus-visible", "Global visible focus handling missing from theme CSS")
+
+    copied_value_count = sum(1 for value in STARTER_TOKEN_VALUES if value in theme_text)
+    explicit_template_marker = "structure example only" in theme_lower or "do not copy this file directly" in theme_lower
+    if explicit_template_marker or copied_value_count >= 5:
+        add(
+            findings,
+            "critical",
+            "THEME005",
+            "Starter token values appear to have been copied unchanged",
+            rel(theme_candidates[0], root),
+            "Derive new token values from the Theme Fingerprint; use semantic-token-template.css only for organization.",
+        )
+
+    if "0.625rem" in theme_text and "0.875rem" in theme_text:
+        geometry = profile.get("geometryModel") if isinstance(profile, dict) else None
+        has_geometry_reason = isinstance(geometry, dict) and bool(str(geometry.get("rationale", "")).strip())
+        if not has_geometry_reason:
+            add(
+                findings,
+                "major",
+                "THEME007",
+                "Radius system matches the starter values without geometry rationale",
+                rel(theme_candidates[0], root),
+                "Define a project-specific geometry model or justify intentional continuity.",
+            )
+
+    if "cubic-bezier(0.2, 0.8, 0.2, 1)" in theme_text or "translatey(0.5rem)" in theme_lower:
+        motion = profile.get("motionModel") if isinstance(profile, dict) else None
+        has_motion_reason = isinstance(motion, dict) and bool(str(motion.get("feedbackBehavior", "")).strip())
+        if not has_motion_reason:
+            add(
+                findings,
+                "major",
+                "THEME008",
+                "Motion system matches the starter pattern without rationale",
+                rel(theme_candidates[0], root),
+                "Define project-specific duration, easing, distance, behavior, and reduced-motion fallback.",
+            )
+
+    if similarity_is_intentional(visual_system):
+        return
+
+    fingerprint = visual_system.get("themeFingerprint") if isinstance(visual_system, dict) else None
+    if isinstance(fingerprint, dict):
+        values = [normalize_words(value) for value in fingerprint.values()]
+        generic_markers = {"rounded cards", "soft shadow", "minimal clean", "modern clean", "saas dashboard"}
+        marker_hits = sum(1 for marker in generic_markers if any(marker in value for value in values))
+        if marker_hits >= 3:
+            add(
+                findings,
+                "major",
+                "THEME001",
+                "Theme Fingerprint suggests recolored generic starter patterns",
+                None,
+                "Revise typography, geometry, density, surface, motion, layout, and component anatomy from the product context.",
+            )
 
 def audit_html(path: Path, root: Path, findings: list[Finding]) -> None:
     text = path.read_text(encoding="utf-8", errors="replace")
@@ -285,6 +667,18 @@ def audit_html(path: Path, root: Path, findings: list[Finding]) -> None:
         if RAW_COLOR_RE.search(fragment):
             add(findings, "minor", "raw-color", f"Raw color in HTML attributes: {fragment[:110]}", location)
 
+    card_signal_count = len(re.findall(r"\b(?:card|rounded-(?:lg|xl|2xl|3xl)|shadow-(?:sm|md|lg|xl|2xl)|shadow-surface)\b", text, re.IGNORECASE))
+    shadow_signal_count = len(re.findall(r"\b(?:shadow-(?:sm|md|lg|xl|2xl)|shadow-surface)\b", text, re.IGNORECASE))
+    if card_signal_count >= 12 and shadow_signal_count >= 6:
+        add(
+            findings,
+            "minor",
+            "THEME006",
+            "Universal card pattern or repeated card shadows may be overused",
+            location,
+            "Confirm the component anatomy follows the Theme Fingerprint; use rows, dividers, typography, sections, or other product-specific structures when appropriate.",
+        )
+
 
 
 def audit_javascript(path: Path, root: Path, findings: list[Finding]) -> None:
@@ -310,6 +704,8 @@ def audit(root: Path) -> list[Finding]:
     findings: list[Finding] = []
     html_files = sorted(root.rglob("*.html"))
     js_files = sorted(root.rglob("*.js"))
+    profile_path = find_design_profile(root)
+    profile = audit_design_profile(profile_path, root, findings) if profile_path else None
 
     if not html_files:
         add(findings, "blocker", "no-html", "No HTML files found")
@@ -326,6 +722,7 @@ def audit(root: Path) -> list[Finding]:
 
     required_handoff = (
         "design-system/component-map.json",
+        "design-system/visual-system.md",
         "docs/component-inventory.md",
         "docs/route-map.md",
         "docs/react-handoff.md",
@@ -334,18 +731,17 @@ def audit(root: Path) -> list[Finding]:
         if not (root / relative).exists():
             add(findings, "major", "react-handoff", f"React-readiness handoff artifact missing: {relative}")
 
-    theme_candidates = list(root.rglob("theme.css"))
-    if not theme_candidates:
-        add(findings, "critical", "theme-file", "theme.css not found")
-    else:
-        theme_text = "\n".join(p.read_text(encoding="utf-8", errors="replace") for p in theme_candidates)
-        for token in ("--primary", "--background", "--foreground", "--border", "--focus"):
-            if token not in theme_text:
-                add(findings, "major", "theme-token", f"Semantic token missing from theme CSS: {token}")
-        if "prefers-reduced-motion" not in theme_text:
-            add(findings, "critical", "reduced-motion", "Reduced-motion handling missing from theme CSS")
-        if ":focus-visible" not in theme_text:
-            add(findings, "critical", "focus-visible", "Global visible focus handling missing from theme CSS")
+    if profile_path is None:
+        add(
+            findings,
+            "critical",
+            "THEME002",
+            "design-profile.json not found",
+            None,
+            "Create design-system/design-profile.json with visualSystem.themeFingerprint before implementation.",
+        )
+
+    audit_theme_css(root, findings, profile)
 
     return sorted(findings, key=lambda item: (SEVERITY_ORDER[item.severity], item.file or "", item.code))
 
@@ -383,6 +779,7 @@ def main() -> int:
         for item in findings:
             location = f" [{item.file}]" if item.file else ""
             lines.append(f"{item.severity.upper():8} {item.code}{location}: {item.message}")
+            lines.append(f"         Remediation: {item.remediation}")
         lines.append("")
         lines.append("Audit complete: " + ", ".join(f"{value} {key}" for key, value in summary.items()))
         lines.append("Static preflight only; manual browser and assistive-technology checks are still required.")

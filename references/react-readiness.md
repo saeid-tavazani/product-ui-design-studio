@@ -89,14 +89,14 @@ States:
 
 ## Markup rules
 
-Write HTML that converts cleanly to JSX:
+Write HTML that converts cleanly to a future component implementation:
 
 - use valid semantic nesting
 - close void elements consistently
 - avoid malformed optional end tags
 - avoid inline `style` unless a dynamic value cannot be represented by a token or utility
 - avoid inline event attributes such as `onclick`, `onchange`, and `onsubmit`
-- use `class`, `for`, and other normal HTML attributes in the prototype; document their JSX equivalents rather than writing JSX in HTML
+- use `class`, `for`, and other normal HTML attributes in the prototype; document future framework attribute changes only in handoff notes
 - keep stable IDs only where accessibility relationships require them
 - use `data-*` attributes for component identity, behavior hooks, variants, and state
 - keep visible content as real text, not CSS-generated content
@@ -252,7 +252,7 @@ Recommend an incremental conversion:
 
 Mark every interaction as:
 
-- `direct`: markup and classes transfer with minor JSX syntax changes
+- `direct`: semantic markup and classes transfer with minor future framework syntax changes
 - `state-rewrite`: visual contract transfers; vanilla DOM state becomes React state
 - `library-adapter`: a focused library needs a React wrapper or lifecycle integration
 - `backend-dependent`: design transfers but real behavior requires API/auth/storage work

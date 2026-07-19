@@ -10,6 +10,15 @@ Do not claim the project is complete until relevant checks pass.
 - [ ] Later phases have page/feature mappings.
 - [ ] Contradictions and assumptions are documented.
 - [ ] User-defined visual ideas are preserved in the design profile.
+- [ ] Visual System Derivation is complete before page implementation.
+- [ ] `visualSystem.themeFingerprint` exists in `design-profile.json`.
+- [ ] `visualSystem.derivedDimensions` contains unique values.
+- [ ] Concept-tier work has at least five derived dimensions; standard and complete work have at least eight.
+- [ ] The visual rationale is product-specific and not generic phrasing alone.
+- [ ] Signature element is defined and tied to product meaning.
+- [ ] Distinctiveness checks are completed.
+- [ ] The design remains distinct in grayscale and without logo/images.
+- [ ] Intentional similarity to an existing brand or product family is documented when applicable.
 - [ ] Database suggestions did not silently override user decisions.
 - [ ] Research findings, direct statements, secondary evidence, and assumptions are clearly separated.
 - [ ] Assumption-based personas are labeled as proto-personas.
@@ -42,6 +51,9 @@ Do not claim the project is complete until relevant checks pass.
 - [ ] Changing the brand seed updates brand-dependent UI.
 - [ ] Typography roles and scale are consistent.
 - [ ] Spacing, radius, borders, and elevation follow a defined system.
+- [ ] Geometry, elevation, and motion differ from the starter system unless explicitly justified.
+- [ ] Component anatomy follows the Theme Fingerprint rather than a universal card/button style.
+- [ ] Layout model follows tasks and content hierarchy rather than the default hero/cards or dashboard/table pattern.
 - [ ] The design has one product-specific signature element.
 - [ ] Decorative effects are justified and restrained.
 - [ ] Copy is specific to the actual product.

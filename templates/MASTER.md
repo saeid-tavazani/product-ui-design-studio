@@ -9,6 +9,14 @@
 - Source mode: user-defined / co-created / custom-generated / database-inspired / hybrid / custom
 - User language preserved:
 
+## Workflow graph status
+
+- Mode: auto / off
+- Completed nodes:
+- Active node:
+- Blockers:
+- Key assumptions:
+
 ## Evidence status
 
 - Observed evidence:
@@ -37,6 +45,18 @@
 - Product meaning:
 - Where it appears:
 - Where it must not appear:
+
+## Material 3 baseline
+
+- Color roles:
+- State-layer behavior:
+- Type scale basis:
+- Shape basis:
+- Elevation basis:
+- Motion basis:
+- Adaptive layout basis:
+- Component anatomy borrowed:
+- Product-specific overrides:
 
 ## Palette
 
@@ -108,6 +128,26 @@
 - Dialogs/drawers:
 - Tables/charts:
 - Feedback and status:
+
+## Prototype architecture
+
+- Output stack: HTML / Tailwind CSS / vanilla JavaScript
+- Page organization:
+- Shared layout shells:
+- HTML component boundaries:
+- JavaScript controllers:
+- Mock data:
+- Mock services:
+- Production API boundaries:
+
+## Future React handoff
+
+- Future app shell:
+- Future route organization:
+- Future page components:
+- Future shared components:
+- State/controllers to rewrite:
+- Migration risks:
 
 ## Content and interaction language
 

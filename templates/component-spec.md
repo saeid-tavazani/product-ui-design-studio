@@ -4,11 +4,15 @@
 
 ## Semantic root
 
-## Future React contract
+## Prototype contract
 
-- Suggested component name:
-- Suggested file/path:
+- Component name:
+- Semantic selector:
+- Source HTML file(s):
+- JavaScript controller:
 - Migration class: direct / state-rewrite / library-adapter / backend-dependent / architecture-review
+- Material 3 baseline:
+- Product-specific override:
 
 ## Props and data
 
@@ -20,12 +24,11 @@
 
 ## Actions / callbacks
 
-## Prototype hooks
+## Prototype behavior
 
-- `data-component`:
-- `data-action`:
-- JavaScript module:
 - Mock data source:
+- State owner:
+- Service boundary:
 
 ## Anatomy
 
@@ -55,9 +58,10 @@
 
 ## Acceptance criteria
 
-- [ ] Semantic markup can transfer without redesign.
-- [ ] Tailwind classes use semantic tokens and transfer to `className`.
+- [ ] Prototype uses semantic HTML, Tailwind CSS, and vanilla JavaScript only.
+- [ ] Tailwind classes use semantic tokens.
 - [ ] Variants and states have explicit stable names.
-- [ ] DOM behavior has a documented React-state equivalent.
-- [ ] Business data is not stored as HTML strings or CSS class names.
+- [ ] Prototype behavior maps to future production state, service, or route ownership.
+- [ ] Business data is not stored as CSS class names.
+- [ ] No React, Next.js, JSX, TSX, or TypeScript source files are generated for this prototype.
 - [ ]
